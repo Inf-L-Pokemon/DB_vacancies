@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "db-vacancies"
+version = "0.1.0"
+description = ""
+authors = ["Sergey Korchmin <sergey.korchmin@yandex.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
