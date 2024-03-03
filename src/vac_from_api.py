@@ -12,7 +12,7 @@ class HeadHunterAPI:
         self.employer_id = employer_id
         self.__basic_url = f"https://api.hh.ru/employers/{self.employer_id}"
 
-    def get_emp_info_from_api(self):
+    def get_emp_info_from_api(self) -> dict:
         """
         Получение данных о работодателе
         :return: Данные о работодателе
@@ -25,7 +25,7 @@ class HeadHunterAPI:
 
         return emp_dict
 
-    def get_vac_info_from_api(self):
+    def get_vac_info_from_api(self) -> list[dict]:
         """
         Получение данных о вакансиях определенного работодателя
         :return: Данные о вакансиях
