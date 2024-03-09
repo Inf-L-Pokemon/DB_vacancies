@@ -1,5 +1,3 @@
-from pprint import pprint
-
 import requests
 
 
@@ -11,6 +9,8 @@ class HeadHunterAPI:
     def __init__(self, employer_id: int):
         self.employer_id = employer_id
         self.__basic_url = f"https://api.hh.ru/employers/{self.employer_id}"
+        self.page = 0
+        self.per_page = 50
 
     def get_emp_info_from_api(self) -> dict:
         """
@@ -20,8 +20,9 @@ class HeadHunterAPI:
 
         response = requests.get(self.__basic_url)
         emp_json = response.json()
-        emp_dict = dict(employer_id=int(emp_json["id"]), employer_name=emp_json["name"],
-                        open_vacancies=emp_json["open_vacancies"])
+        emp_dict = dict(
+            employer_id=int(emp_json["id"]), employer_name=emp_json["name"], open_vacancies=emp_json["open_vacancies"]
+        )
 
         return emp_dict
 
@@ -33,13 +34,32 @@ class HeadHunterAPI:
 
         vac_list = []
 
-        params = {"employer_id": self.employer_id}
+        params = {"employer_id": self.employer_id, "page": self.page, "per_page": self.per_page}
         response = requests.get("https://api.hh.ru/vacancies", params=params)
         vac_json = response.json()
+
+        while self.page < vac_json["pages"] - 1:
+            self.page += 1
+            response = requests.get(
+                "https://api.hh.ru/vacancies",
+                params={
+                    "employer_id": self.employer_id,
+                    "page": self.page,
+                    "per_page": self.per_page,
+                },
+            )
+            vac_json["items"].extend(response.json()["items"])
+
         for vacancy in vac_json["items"]:
-            vac_dict = dict(vacancy_id=int(vacancy["id"]), vacancy_name=vacancy["name"],
-                            salary=get_salary(vacancy),
-                            vacancy_url=vacancy["alternate_url"])
+            vac_dict = dict(
+                vacancy_id=int(vacancy["id"]),
+                vacancy_name=vacancy["name"],
+                salary=get_salary(vacancy),
+                employer_id=self.employer_id,
+                vacancy_url=vacancy["alternate_url"],
+            )
+            if vac_dict in vac_list:
+                continue
             vac_list.append(vac_dict)
 
         return vac_list
@@ -61,9 +81,3 @@ def get_salary(vacancy: dict) -> int | None:
         return vacancy["salary"]["to"]
     else:
         return vacancy["salary"]
-
-
-if __name__ == '__main__':
-    hh = HeadHunterAPI(1455)
-    pprint(hh.get_emp_info_from_api())
-    pprint(hh.get_vac_info_from_api())
