@@ -12,7 +12,7 @@ def create_table_employers(password: str) -> None:
         with conn:
             with conn.cursor() as cur:
                 cur.execute(
-                    "CREATE TABLE employers (employer_id int PRIMARY KEY, employer_name varchar(100), "
+                    "CREATE TABLE IF NOT EXISTS employers (employer_id int PRIMARY KEY, employer_name varchar(100), "
                     "open_vacancies int)"
                 )
     finally:
@@ -30,7 +30,7 @@ def create_table_vacancies(password: str) -> None:
         with conn:
             with conn.cursor() as cur:
                 cur.execute(
-                    "CREATE TABLE vacancies (vacancy_id int PRIMARY KEY, vacancy_name varchar(100), "
+                    "CREATE TABLE IF NOT EXISTS vacancies (vacancy_id int PRIMARY KEY, vacancy_name varchar(100), "
                     "employer_id int REFERENCES employers(employer_id) NOT NULL, "
                     "salary int, vacancy_url varchar(100))"
                 )

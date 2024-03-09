@@ -2,12 +2,7 @@ import os
 
 from dotenv import load_dotenv
 
-from src.create_del_table import (
-    create_table_employers,
-    create_table_vacancies,
-    del_table_employers,
-    del_table_vacancies,
-)
+from src.create_del_table import create_table_employers, create_table_vacancies
 from src.to_db import Employers, Vacancies
 from src.vac_from_api import HeadHunterAPI
 
@@ -58,6 +53,7 @@ def main() -> None:
         quit(ex.__repr__())
 
     try:
+        print("\nДанная процедура займёт продолжительное время. Пожалуйста, наберитесь терпения и подождите...")
         for emp_id in employers_id.values():
             response = HeadHunterAPI(emp_id)
 
@@ -66,12 +62,11 @@ def main() -> None:
 
             for vac in response.get_vac_info_from_api():
                 Vacancies(vac).add_vac_to_db()
+        print("\nВсё прошло успешно! База данных заполнена вакансиями от указанных выше работодателей.")
     except Exception as ex:
         print("Произошла непредвиденная ошибка. Пожалуйста, попробуйте повторить данную процедуру позже.")
         quit(ex.__repr__())
 
 
 if __name__ == "__main__":
-    del_table_vacancies(password_db)
-    del_table_employers(password_db)
     main()

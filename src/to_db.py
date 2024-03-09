@@ -5,6 +5,9 @@ from dotenv import load_dotenv
 
 
 class Employers:
+    """
+    Заполняет таблицу "employers" в базе данных "job_search" данными о работодателях.
+    """
     load_dotenv()
     password_db: str | None = os.getenv("PASS_DB_PGSQL")
 
@@ -29,6 +32,9 @@ class Employers:
 
 
 class Vacancies:
+    """
+    Заполняет таблицу "vacancies" в базе данных "job_search" данными о вакансиях.
+    """
     load_dotenv()
     password_db: str | None = os.getenv("PASS_DB_PGSQL")
 
