@@ -10,7 +10,7 @@ class HeadHunterAPI:
         self.employer_id = employer_id
         self.__basic_url = f"https://api.hh.ru/employers/{self.employer_id}"
         self.page = 0
-        self.per_page = 50
+        self.per_page = 100
 
     def get_emp_info_from_api(self) -> dict:
         """
@@ -37,18 +37,6 @@ class HeadHunterAPI:
         params = {"employer_id": self.employer_id, "page": self.page, "per_page": self.per_page}
         response = requests.get("https://api.hh.ru/vacancies", params=params)
         vac_json = response.json()
-
-        while self.page < vac_json["pages"] - 1:
-            self.page += 1
-            response = requests.get(
-                "https://api.hh.ru/vacancies",
-                params={
-                    "employer_id": self.employer_id,
-                    "page": self.page,
-                    "per_page": self.per_page,
-                },
-            )
-            vac_json["items"].extend(response.json()["items"])
 
         for vacancy in vac_json["items"]:
             vac_dict = dict(

@@ -54,7 +54,7 @@ def main() -> None:
 
     try:
         print("\nДанная процедура займёт продолжительное время. Пожалуйста, наберитесь терпения и подождите...")
-        for emp_id in employers_id.values():
+        for emp_name, emp_id in employers_id.items():
             response = HeadHunterAPI(emp_id)
 
             emp_to_db = Employers(response.get_emp_info_from_api())
@@ -62,6 +62,7 @@ def main() -> None:
 
             for vac in response.get_vac_info_from_api():
                 Vacancies(vac).add_vac_to_db()
+            print(f"Добавлены вакансии от {emp_name}")
         print("\nВсё прошло успешно! База данных заполнена вакансиями от указанных выше работодателей.")
     except Exception as ex:
         print("Произошла непредвиденная ошибка. Пожалуйста, попробуйте повторить данную процедуру позже.")
